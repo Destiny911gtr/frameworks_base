@@ -5097,9 +5097,8 @@ public class StatusBar extends SystemUI implements DemoMode,
     protected void updateTheme() {
         final boolean inflated = mStackScroller != null;
 
-        int userThemeSetting = Settings.Secure.getIntForUser(mContext.getContentResolver(),
-                Settings.Secure.DEVICE_THEME, 0, mCurrentUserId);
-        boolean useBlackTheme = false;
+        int userThemeSetting = Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.SYSTEM_UI_THEME, 0, mCurrentUserId);
         boolean useDarkTheme = false;
         if (userThemeSetting == 0) {
             // The system wallpaper defines if QS should be light or dark.
@@ -5109,7 +5108,6 @@ public class StatusBar extends SystemUI implements DemoMode,
                     && (systemColors.getColorHints() & WallpaperColors.HINT_SUPPORTS_DARK_THEME) != 0;
         } else {
             useDarkTheme = userThemeSetting == 2;
-            useBlackTheme = userThemeSetting == 3;
         }
         if (isUsingDarkTheme() != useDarkTheme) {
             try {
@@ -6338,6 +6336,9 @@ public class StatusBar extends SystemUI implements DemoMode,
                     Settings.System.DOUBLE_TAP_SLEEP_GESTURE),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.SYSTEM_UI_THEME),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.QS_ROWS_PORTRAIT),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
@@ -6393,7 +6394,10 @@ public class StatusBar extends SystemUI implements DemoMode,
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            update();
+            if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.SYSTEM_UI_THEME))) {
+                updateTheme();
+            }
         }
 
         public void update() {
