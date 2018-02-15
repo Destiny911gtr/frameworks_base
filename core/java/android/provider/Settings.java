@@ -4546,7 +4546,14 @@ public final class Settings {
         public static final String BATTERY_BAR_BATTERY_LOW_COLOR = "battery_bar_battery_low_color";
 
         /**
-         * Which applications to disable heads up notifications for
+         * Select various accents to go along with system themes
+         *
+         * @hide
+         */
+        public static final String ACCENT_PICKER = "accent_picker";
+
+        /**
+         * Heads up blacklist
          *
          * @hide
          */
